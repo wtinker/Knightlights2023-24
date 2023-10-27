@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.MyCode;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -27,6 +28,7 @@ public class Output {
         Claw.setPosition(0.4);
 
         myOpMode.telemetry.addData("Output Initialized", null);
+        telemetry.update();
     }
     public void Extend(int targ){
         SlideTarget = targ;
@@ -35,6 +37,7 @@ public class Output {
     }
     public void Adjust(int value){
         SlideTarget += value;
+        if(SlideTarget < 1000){SlideTarget = 1000;}
     }
     public void Retract(){
         SlideExtended = false;

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.MyCode;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -17,6 +18,7 @@ public class Intake {
         intake = hardwareMap.get(DcMotorEx.class, "intake");
 
         myOpMode.telemetry.addData("Intake Initialized", null);
+        telemetry.update();
     }
     public void Start(){
         intake.setPower(0.5);
