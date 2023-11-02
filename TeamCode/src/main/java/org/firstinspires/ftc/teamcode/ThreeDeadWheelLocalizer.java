@@ -29,9 +29,9 @@ public final class ThreeDeadWheelLocalizer implements Localizer {
     private int lastPar0Pos, lastPar1Pos, lastPerpPos;
 
     public ThreeDeadWheelLocalizer(HardwareMap hardwareMap, double inPerTick) {
-        par0 = new RawEncoder(hardwareMap.get(DcMotorEx.class, "Front Left"));
-        par1 = new RawEncoder(hardwareMap.get(DcMotorEx.class, "Back Right"));
-        perp = new RawEncoder(hardwareMap.get(DcMotorEx.class, "Back Left"));
+        par0 = new RawEncoder(hardwareMap.get(DcMotorEx.class, "Back Left"));
+        par1 = new RawEncoder(hardwareMap.get(DcMotorEx.class, "Front Right"));
+        perp = new RawEncoder(hardwareMap.get(DcMotorEx.class, "Back Right"));
 
         lastPar0Pos = par0.getPositionAndVelocity().position;
         lastPar1Pos = par1.getPositionAndVelocity().position;
