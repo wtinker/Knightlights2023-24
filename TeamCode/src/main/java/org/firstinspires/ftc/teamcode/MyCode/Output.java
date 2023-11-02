@@ -1,10 +1,11 @@
 package org.firstinspires.ftc.teamcode.MyCode;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class Output {
@@ -14,21 +15,22 @@ public class Output {
     int SlideTarget = 0;
     boolean SlideExtended = false;
     ClawStatus clawStatus = ClawStatus.OPEN;
-    public Output (LinearOpMode opmode) {
+    public Output (LinearOpMode opmode, HardwareMap hardwareMap) {
         myOpMode = opmode;
-    }
-    public void init(){
+        hardwareMap = hardwareMap;
+
         Slide = hardwareMap.get(DcMotor.class, "Slide");
+        Slide.setDirection(DcMotorSimple.Direction.REVERSE);
         Slide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         Slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         Base = hardwareMap.get(Servo.class, "Base");
         Claw = hardwareMap.get(Servo.class, "Claw");
-        Base.setPosition(0);
+        Base.setPosition(1);
         Claw.setPosition(0.4);
 
         myOpMode.telemetry.addData("Output Initialized", null);
-        telemetry.update();
+        myOpMode.telemetry.update();
     }
     public void Extend(int targ){
         SlideTarget = targ;
@@ -37,7 +39,7 @@ public class Output {
     }
     public void Adjust(int value){
         SlideTarget += value;
-        if(SlideTarget < 1000){SlideTarget = 1000;}
+        if(SlideTarget < 700){SlideTarget = 700;}
     }
     public void Retract(){
         SlideExtended = false;
@@ -51,8 +53,8 @@ public class Output {
 
         if(!SlideExtended){
             Base.setPosition(1);
-        } else if(SlideExtended && Slide.getCurrentPosition() > 1000){
-            Base.setPosition(0.3);
+        } else if(SlideExtended && Slide.getCurrentPosition() > 700){
+            Base.setPosition(0);
         }
     }
     public void Single(){

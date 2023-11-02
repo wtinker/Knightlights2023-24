@@ -6,22 +6,25 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.tel
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Intake {
     private LinearOpMode myOpMode = null;
     DcMotor intake;
     boolean isPowered = false;
-    public Intake (LinearOpMode opmode) {
+    public Intake (LinearOpMode opmode, HardwareMap hardwareMap) {
         myOpMode = opmode;
-    }
-    public void init(){
-        intake = hardwareMap.get(DcMotorEx.class, "intake");
+        hardwareMap = hardwareMap;
+
+        intake = hardwareMap.get(DcMotorEx.class, "Intake");
+        intake.setDirection(DcMotorSimple.Direction.REVERSE);
 
         myOpMode.telemetry.addData("Intake Initialized", null);
-        telemetry.update();
+        myOpMode.telemetry.update();
     }
     public void Start(){
-        intake.setPower(0.5);
+        intake.setPower(0.8);
         isPowered = true;
     }
     public void Stop(){
