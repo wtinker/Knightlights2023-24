@@ -28,10 +28,13 @@ public class BasicTeleop extends LinearOpMode {
         Output output = new Output(this, hardwareMap);
         Intake intake = new Intake(this, hardwareMap);
         //AprilTag aprilTag = new AprilTag(this);
-        Drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
+        Drive = new MecanumDrive(hardwareMap, Storage.poseStorage);
         int FullExtension = 2050;
 
         //aprilTag.init();
+
+        telemetry.addData("Finished Initialization", null);
+        telemetry.update();
 
         waitForStart();
 

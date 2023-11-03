@@ -26,7 +26,7 @@ public class Output {
 
         Base = hardwareMap.get(Servo.class, "Base");
         Claw = hardwareMap.get(Servo.class, "Claw");
-        Base.setPosition(1);
+        Base.setPosition(0);
         Claw.setPosition(0.4);
 
         myOpMode.telemetry.addData("Output Initialized", null);
@@ -49,12 +49,12 @@ public class Output {
     public void RunOutput(){
         Slide.setTargetPosition(SlideTarget);
         Slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        Slide.setPower(0.8);
+        Slide.setPower(0.6);
 
         if(!SlideExtended){
-            Base.setPosition(1);
-        } else if(SlideExtended && Slide.getCurrentPosition() > 700){
             Base.setPosition(0);
+        } else if(SlideExtended && Slide.getCurrentPosition() > 700){
+            Base.setPosition(0.4);
         }
     }
     public void Single(){
