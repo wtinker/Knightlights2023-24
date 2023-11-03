@@ -54,7 +54,7 @@ public class Output {
         if(!SlideExtended){
             Base.setPosition(0);
         } else if(SlideExtended && Slide.getCurrentPosition() > 700){
-            Base.setPosition(0.4);
+            Base.setPosition(0.6);
         }
     }
     public void Single(){

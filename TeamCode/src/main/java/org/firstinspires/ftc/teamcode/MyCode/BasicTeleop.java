@@ -52,8 +52,8 @@ public class BasicTeleop extends LinearOpMode {
             if(gamepad1.y){output.Extend(FullExtension);}
             if(gamepad1.a){output.Retract();}
 
-            if(gamepad1.dpad_up){output.Adjust(100);}
-            if(gamepad1.dpad_down){output.Adjust(-100);}
+            if(gamepad1.dpad_up){output.Adjust(50);}
+            if(gamepad1.dpad_down){output.Adjust(-50);}
 
         }
 
