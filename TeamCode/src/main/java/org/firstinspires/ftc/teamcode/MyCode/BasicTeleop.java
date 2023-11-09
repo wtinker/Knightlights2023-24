@@ -47,6 +47,7 @@ public class BasicTeleop extends LinearOpMode {
             else {RunDriveTrain();}
 
             if(gamepad1.left_bumper && leftCooldown()){intake.Toggle();}
+            if(gamepad1.b){intake.Reverse();}
             if(gamepad1.right_bumper && rightCooldown()){output.Cycle();}
 
             if(gamepad1.y){output.Extend(FullExtension);}

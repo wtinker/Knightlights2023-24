@@ -27,7 +27,7 @@ public class Output {
         Base = hardwareMap.get(Servo.class, "Base");
         Claw = hardwareMap.get(Servo.class, "Claw");
         Base.setPosition(0);
-        Claw.setPosition(0.4);
+        Claw.setPosition(0.5);
 
         myOpMode.telemetry.addData("Output Initialized", null);
         myOpMode.telemetry.update();
@@ -58,15 +58,15 @@ public class Output {
         }
     }
     public void Single(){
-        Claw.setPosition(0.5);
+        Claw.setPosition(0.525);
         clawStatus = ClawStatus.SINGLE;
     }
     public void Double(){
-        Claw.setPosition(0.54);
+        Claw.setPosition(0.5);
         clawStatus = ClawStatus.DOUBLE;
     }
     public void Open(){
-        Claw.setPosition(0.4);
+        Claw.setPosition(0.6);
         clawStatus = ClawStatus.OPEN;
     }
     public void Cycle(){
