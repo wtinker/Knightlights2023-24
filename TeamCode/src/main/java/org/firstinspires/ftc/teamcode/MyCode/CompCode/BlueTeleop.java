@@ -44,6 +44,7 @@ public class BlueTeleop extends LinearOpMode {
 
             if(Storage.targetFound && gamepad1.right_trigger > 0.5){AprilTagDrive();}
             else {RunDriveTrain();}
+            if(gamepad1.left_stick_button){Drive.setPoseEstimate(new Pose2d(0, 0, 0));}
 
             if(gamepad1.left_bumper && leftCooldown()){intake.Toggle();}
             if(gamepad1.b){intake.Reverse();}
