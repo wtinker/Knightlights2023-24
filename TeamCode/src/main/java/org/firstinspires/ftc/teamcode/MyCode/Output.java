@@ -52,7 +52,7 @@ public class Output {
         Slide.setPower(0.6);
 
         if(!SlideExtended){
-            Base.setPosition(0);
+            Base.setPosition(0.02);
         } else if(SlideExtended && Slide.getCurrentPosition() > 700){
             Base.setPosition(0.6);
         }
@@ -75,7 +75,7 @@ public class Output {
                 Double();
                 break;
             case DOUBLE:
-                Single();
+                Open();
                 break;
             case SINGLE:
                 Open();

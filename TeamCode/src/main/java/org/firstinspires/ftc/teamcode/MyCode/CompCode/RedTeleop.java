@@ -21,14 +21,14 @@ public class RedTeleop extends LinearOpMode {
     public void runOpMode(){
         Output output = new Output(this, hardwareMap);
         Intake intake = new Intake(this, hardwareMap);
-        RGB rgb = new RGB(this, hardwareMap);
+        //RGB rgb = new RGB(this, hardwareMap);
 
         //AprilTag aprilTag = new AprilTag(this);
         Drive = new SampleMecanumDrive(hardwareMap);
         int FullExtension = 2050;
 
         //aprilTag.init();
-        rgb.SetRed();
+        //rgb.SetRed();
 
         telemetry.addData("Finished Initialization", null);
         telemetry.update();
@@ -37,10 +37,12 @@ public class RedTeleop extends LinearOpMode {
 
         runtime = getRuntime();
 
+        Drive.setPoseEstimate(new Pose2d(0, 0, Math.toRadians(180)));
+
         while(opModeIsActive()){
 
             output.RunOutput();
-            rgb.Run(getRuntime() - runtime);
+            //rgb.Run(getRuntime() - runtime);
             //aprilTag.RunAprilTags();
 
             if(Storage.targetFound && gamepad1.right_trigger > 0.5){AprilTagDrive();}

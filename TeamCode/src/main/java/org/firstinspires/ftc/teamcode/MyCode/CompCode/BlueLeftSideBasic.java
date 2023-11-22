@@ -28,19 +28,32 @@ public class BlueLeftSideBasic extends LinearOpMode {
         leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
         leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        Intake intake = new Intake(this, hardwareMap);
+
         waitForStart();
 
-        leftRear.setPower(0.8);
-        leftFront.setPower(0.8);
-        rightRear.setPower(0.8);
-        rightFront.setPower(0.8);
+        leftRear.setPower(-0.8);
+        leftFront.setPower(-0.8);
+        rightRear.setPower(-0.8);
+        rightFront.setPower(-0.8);
 
-        sleep(1250);
+        sleep(1500);
 
         leftRear.setPower(0);
         leftFront.setPower(0);
         rightRear.setPower(0);
         rightFront.setPower(0);
+
+        sleep(250);
+
+
+        intake.Start();
+        sleep(100);
+        intake.Stop();
+        sleep(1000);
+        intake.Reverse();
+        sleep(2000);
+        intake.Stop();
     }
 
 }

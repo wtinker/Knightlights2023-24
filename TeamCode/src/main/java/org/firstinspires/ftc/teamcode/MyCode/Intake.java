@@ -24,7 +24,7 @@ public class Intake {
         myOpMode.telemetry.update();
     }
     public void Start(){
-        intake.setPower(0.8);
+        intake.setPower(0.9);
         isPowered = true;
     }
     public void Stop(){
