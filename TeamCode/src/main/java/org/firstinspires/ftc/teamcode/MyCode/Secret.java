@@ -8,11 +8,11 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
-@TeleOp(name = "Basic Teleop")
-public class BasicTeleop extends LinearOpMode {
+@TeleOp(name = "Special tool we'll use for later")
+public class Secret extends LinearOpMode {
 
     public double leftStartTime, rightStartTime;
-
+    double xCoord, yCoord, startTime;
     SampleMecanumDrive Drive;
     public void runOpMode(){
         Output output = new Output(this, hardwareMap);
@@ -26,7 +26,11 @@ public class BasicTeleop extends LinearOpMode {
 
         waitForStart();
 
+        startTime = getRuntime();
+
         while(opModeIsActive()){
+            xCoord = Drive.getPoseEstimate().getX();
+            yCoord = Drive.getPoseEstimate().getY();
 
             output.RunOutput();
             aprilTag.RunAprilTags();
@@ -34,18 +38,20 @@ public class BasicTeleop extends LinearOpMode {
             if(Storage.targetFound && gamepad1.left_trigger > 0.5){AprilTagDrive();}
             else {RunDriveTrain();}
 
-            if(gamepad1.left_bumper && leftCooldown()){intake.Toggle();}
-            if(gamepad1.b){intake.Reverse();}
+            if(xCoord < -24 && intake.isRaised){intake.Lower();}
+            if(xCoord > -24 && !intake.isRaised){intake.Raise();}
+            if(xCoord < -46 && yCoord < 2 && !intake.isPowered){intake.Start();}
+            if((xCoord > -46 || yCoord > 2) && intake.isPowered){intake.Stop();}
+
             if(gamepad1.right_bumper && rightCooldown()){output.Toggle();}
 
-            if(gamepad1.y){output.Extend(FullExtension);}
-            if(gamepad1.a){output.Retract();}
-
-            if(gamepad1.dpad_up){output.Adjust(50);}
-            if(gamepad1.dpad_down){output.Adjust(-50);}
+            if(xCoord > 40 && yCoord > 12 && !output.SlideExtended){output.Extend(FullExtension);}
+            if((xCoord < 40 || yCoord < 12) && output.SlideExtended){output.Retract();}
 
             if(gamepad1.dpad_left){Storage.aprilTagTarg = 4;}
             if(gamepad1.dpad_right){Storage.aprilTagTarg = 6;}
+
+            if(gamepad1.x && getRuntime() - startTime > 90){AutoEndgame();}
 
         }
 
@@ -101,6 +107,10 @@ public class BasicTeleop extends LinearOpMode {
             return true;
         }
         return false;
+    }
+
+    public void AutoEndgame(){
+
     }
 
 }

@@ -8,17 +8,25 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 public class Intake {
     private LinearOpMode myOpMode = null;
     DcMotor intake;
-    boolean isPowered = false;
+    public boolean isPowered = false;
+    public boolean isRaised = true;
+    Servo servo;
+    private double up;
+    private double down;
     public Intake (LinearOpMode opmode, HardwareMap hardwareMap) {
         myOpMode = opmode;
         hardwareMap = hardwareMap;
 
         intake = hardwareMap.get(DcMotorEx.class, "Intake");
         intake.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        //servo = hardwareMap.get(Servo.class, "Intake servo");
+        servo.setPosition(up);
 
         myOpMode.telemetry.addData("Intake Initialized", null);
         myOpMode.telemetry.update();
@@ -41,5 +49,14 @@ public class Intake {
         } else {
             Start();
         }
+    }
+    public void Raise(){
+        isRaised = true;
+        Stop();
+        servo.setPosition(up);
+    }
+    public void Lower(){
+        isRaised = false;
+        servo.setPosition(down);
     }
 }

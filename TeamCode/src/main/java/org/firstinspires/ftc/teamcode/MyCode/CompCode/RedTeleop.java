@@ -51,7 +51,7 @@ public class RedTeleop extends LinearOpMode {
 
             if(gamepad1.left_bumper && leftCooldown()){intake.Toggle();}
             if(gamepad1.b){intake.Reverse();}
-            if(gamepad1.right_bumper && rightCooldown()){output.Cycle();}
+            if(gamepad1.right_bumper && rightCooldown()){output.Toggle();}
 
             if(gamepad1.y){output.Extend(FullExtension);}
             if(gamepad1.a){output.Retract();}
