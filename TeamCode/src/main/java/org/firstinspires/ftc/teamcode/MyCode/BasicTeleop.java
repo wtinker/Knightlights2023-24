@@ -17,11 +17,9 @@ public class BasicTeleop extends LinearOpMode {
     public void runOpMode(){
         Output output = new Output(this, hardwareMap);
         Intake intake = new Intake(this, hardwareMap);
-        //AprilTag aprilTag = new AprilTag(this);
+        AprilTag aprilTag = new AprilTag(this);
         Drive = new SampleMecanumDrive(hardwareMap);
         int FullExtension = 2050;
-
-        //aprilTag.init();
 
         telemetry.addData("Finished Initialization", null);
         telemetry.update();
@@ -31,7 +29,7 @@ public class BasicTeleop extends LinearOpMode {
         while(opModeIsActive()){
 
             output.RunOutput();
-            //aprilTag.RunAprilTags();
+            aprilTag.RunAprilTags();
 
             if(Storage.targetFound && gamepad1.right_trigger > 0.5){AprilTagDrive();}
             else {RunDriveTrain();}
@@ -45,6 +43,9 @@ public class BasicTeleop extends LinearOpMode {
 
             if(gamepad1.dpad_up){output.Adjust(50);}
             if(gamepad1.dpad_down){output.Adjust(-50);}
+
+            if(gamepad1.dpad_left){Storage.aprilTagTarg = 4;}
+            if(gamepad1.dpad_right){Storage.aprilTagTarg = 6;}
 
         }
 
