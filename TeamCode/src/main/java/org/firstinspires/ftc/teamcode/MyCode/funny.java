@@ -8,14 +8,16 @@ import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.MyCode.FieldElementAvoidance.FieldElementAvoider;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
-@TeleOp(name = "Special tool we'll use for later")
-public class Secret extends LinearOpMode {
+@TeleOp(name = "funny")
+public class funny extends LinearOpMode {
 
     public double leftStartTime, rightStartTime;
     double xCoord, yCoord, rot, startTime;
     SampleMecanumDrive Drive;
+    FieldElementAvoider FEA = new FieldElementAvoider(1);
     public void runOpMode(){
         Output output = new Output(this, hardwareMap);
         Intake intake = new Intake(this, hardwareMap);
@@ -72,8 +74,10 @@ public class Secret extends LinearOpMode {
     public void RunDriveTrain(){
         Drive.setWeightedDrivePower(new Pose2d(
                 new Vector2d(
-                        -gamepad1.left_stick_y,
-                        -gamepad1.left_stick_x
+                        FEA.getCorrectedX(Drive.getPoseEstimate().getX(), Drive.getPoseEstimate().getY(),
+                                Drive.getPoseEstimate().getHeading(), -gamepad1.left_stick_y, -gamepad1.left_stick_x),
+                        FEA.getCorrectedY(Drive.getPoseEstimate().getX(), Drive.getPoseEstimate().getY(),
+                                Drive.getPoseEstimate().getHeading(), -gamepad1.left_stick_y, -gamepad1.left_stick_x)
                 ),
                 -gamepad1.right_stick_x
         ));
@@ -84,6 +88,8 @@ public class Secret extends LinearOpMode {
         telemetry.addData("x", poseEstimate.getX());
         telemetry.addData("y", poseEstimate.getY());
         telemetry.addData("heading", poseEstimate.getHeading());
+        telemetry.addData("x correction", FEA.returnX(Drive.getPoseEstimate().getX(), Drive.getPoseEstimate().getY(), Drive.getPoseEstimate().getHeading()));
+        telemetry.addData("x correction", FEA.returnY(Drive.getPoseEstimate().getX(), Drive.getPoseEstimate().getY(), Drive.getPoseEstimate().getHeading()));
         telemetry.update();
     }
 

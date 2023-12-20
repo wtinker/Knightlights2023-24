@@ -16,12 +16,12 @@ public class Output {
     public boolean SlideExtended = false;
     //ClawStatus clawStatus = ClawStatus.OPEN;
     private boolean scoring = false;
+    private double scoreTime;
     public Output (LinearOpMode opmode, HardwareMap hardwareMap) {
         myOpMode = opmode;
         hardwareMap = hardwareMap;
 
         Slide = hardwareMap.get(DcMotor.class, "Slide312");
-        Slide.setDirection(DcMotorSimple.Direction.REVERSE);
         Slide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         Slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -60,10 +60,12 @@ public class Output {
         Slide.setPower(0.6);
 
         if(!SlideExtended){Descore();}
+        if(myOpMode.getRuntime() - scoreTime > 2){Descore();}
     }
     public void Score(){
         scoring = true;
         Base.setPosition(0.6);
+        scoreTime = myOpMode.getRuntime();
     }
     public void Descore(){
         scoring = false;

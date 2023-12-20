@@ -16,8 +16,8 @@ public class Intake {
     public boolean isPowered = false;
     public boolean isRaised = true;
     Servo servo;
-    private double up;
-    private double down;
+    double up = 0;
+    double down = 0;
     public Intake (LinearOpMode opmode, HardwareMap hardwareMap) {
         myOpMode = opmode;
         hardwareMap = hardwareMap;
@@ -25,7 +25,7 @@ public class Intake {
         intake = hardwareMap.get(DcMotorEx.class, "Intake");
         intake.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        //servo = hardwareMap.get(Servo.class, "Intake servo");
+        servo = hardwareMap.get(Servo.class, "Intake servo");
         servo.setPosition(up);
 
         myOpMode.telemetry.addData("Intake Initialized", null);
