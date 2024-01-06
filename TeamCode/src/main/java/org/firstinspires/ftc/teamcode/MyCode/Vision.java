@@ -27,6 +27,7 @@ public class Vision extends LinearOpMode {
                 .addProcessor(tagProcessor)
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
                 .setCameraResolution(new Size(640, 480))
+                .enableLiveView(true)
                 .build();
 
 
