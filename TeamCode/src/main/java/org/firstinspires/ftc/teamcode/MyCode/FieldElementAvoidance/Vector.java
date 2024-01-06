@@ -1,7 +1,15 @@
 package org.firstinspires.ftc.teamcode.MyCode.FieldElementAvoidance;
 
+import com.acmerobotics.roadrunner.geometry.Vector2d;
+
 public class Vector {
     double xValue, yValue, mag, theta;
+    public Vector(){
+        xValue = 0;
+        yValue = 0;
+        mag = 0;
+        theta = 0;
+    }
     public Vector(double x, double y){
         xValue = x;
         yValue = y;
@@ -44,14 +52,28 @@ public class Vector {
         mag = Math.sqrt(xValue*xValue + yValue*yValue);
         theta = Math.atan2(yValue, xValue);
     }
+    public void scale(double xFactor, double yFactor){
+        xValue = xValue * xFactor;
+        yValue = yValue * yFactor;
+        mag = Math.sqrt(xValue*xValue + yValue*yValue);
+        theta = Math.atan2(yValue, xValue);
+    }
     public void scale(double factor){
         mag = mag * factor;
         xValue = mag * Math.cos(theta);
         yValue = mag * Math.sin(theta);
     }
-    public void clip(){
-        mag = 1;
+    public void clip(double range){
+        if(mag > range){mag = range;}
         xValue = mag * Math.cos(theta);
         yValue = mag * Math.sin(theta);
+    }
+    public Vector2d toV2D(){
+        Vector2d out = new Vector2d(xValue, yValue);
+        return out;
+    }
+    public static Vector addVectors(Vector v1, Vector v2){
+        v1.addVector(v2);
+        return v1;
     }
 }

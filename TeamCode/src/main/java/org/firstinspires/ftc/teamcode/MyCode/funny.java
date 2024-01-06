@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.MyCode.FieldElementAvoidance.FieldElementAvoider;
+import org.firstinspires.ftc.teamcode.MyCode.FieldElementAvoidance.Vector;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @TeleOp(name = "funny")
@@ -17,7 +18,7 @@ public class funny extends LinearOpMode {
     public double leftStartTime, rightStartTime;
     double xCoord, yCoord, rot, startTime;
     SampleMecanumDrive Drive;
-    FieldElementAvoider FEA = new FieldElementAvoider(1);
+    FieldElementAvoider FEA = new FieldElementAvoider(0, 5);
     public void runOpMode(){
         Output output = new Output(this, hardwareMap);
         Intake intake = new Intake(this, hardwareMap);
@@ -28,7 +29,7 @@ public class funny extends LinearOpMode {
         telemetry.addData("Finished Initialization", null);
         telemetry.update();
 
-        Trajectory t1;
+        Trajectory Trajright, Trajleft;
 
         waitForStart();
 
@@ -39,18 +40,15 @@ public class funny extends LinearOpMode {
             yCoord = Drive.getPoseEstimate().getY();
             rot = Drive.getPoseEstimate().getHeading();
 
-            t1 = Drive.trajectoryBuilder(new Pose2d(xCoord, yCoord, rot)).lineTo(new Vector2d(51, -38)).build();
+            Trajright = Drive.trajectoryBuilder(new Pose2d(xCoord, yCoord, rot)).lineTo(new Vector2d(51, -38)).build();
+            Trajleft = Drive.trajectoryBuilder(new Pose2d(xCoord, yCoord, rot)).lineTo(new Vector2d(51, -26)).build();
+
 
             output.RunOutput();
 
-            if(gamepad1.left_trigger > 0.5){
-                aprilTag.RunAprilTags();
-                if(Storage.targetFound){AprilTagDrive();}
-                else{RunDriveTrain();}}
-            else if(gamepad1.right_trigger > 0.5){
-                Drive.followTrajectory(t1);
-            }
-            else {RunDriveTrain();}
+            if(gamepad1.dpad_left){Drive.followTrajectory(Trajleft);}
+            if(gamepad1.dpad_right){Drive.followTrajectory(Trajright);}
+            RunDriveTrain();
 
             if(xCoord < -24 && intake.isRaised){intake.Lower();}
             if(xCoord > -24 && !intake.isRaised){intake.Raise();}
@@ -62,9 +60,6 @@ public class funny extends LinearOpMode {
             if(xCoord > 40 && yCoord < -12 && !output.SlideExtended){output.Extend(FullExtension);}
             if((xCoord < 40 || yCoord > -12)){output.Retract();}
 
-            if(gamepad1.dpad_left){Storage.aprilTagTarg = 4;}
-            if(gamepad1.dpad_right){Storage.aprilTagTarg = 6;}
-
             if(gamepad1.x && getRuntime() - startTime > 90){AutoEndgame();}
 
         }
@@ -72,13 +67,10 @@ public class funny extends LinearOpMode {
     }
 
     public void RunDriveTrain(){
+        Vector correctedInput = FEA.getCorrectedVector(Drive.getPoseEstimate().getX(), Drive.getPoseEstimate().getY(),
+                Drive.getPoseEstimate().getHeading(), -gamepad1.left_stick_y, -gamepad1.left_stick_x);
         Drive.setWeightedDrivePower(new Pose2d(
-                new Vector2d(
-                        FEA.getCorrectedX(Drive.getPoseEstimate().getX(), Drive.getPoseEstimate().getY(),
-                                Drive.getPoseEstimate().getHeading(), -gamepad1.left_stick_y, -gamepad1.left_stick_x),
-                        FEA.getCorrectedY(Drive.getPoseEstimate().getX(), Drive.getPoseEstimate().getY(),
-                                Drive.getPoseEstimate().getHeading(), -gamepad1.left_stick_y, -gamepad1.left_stick_x)
-                ),
+                correctedInput.toV2D(),
                 -gamepad1.right_stick_x
         ));
 
@@ -89,7 +81,7 @@ public class funny extends LinearOpMode {
         telemetry.addData("y", poseEstimate.getY());
         telemetry.addData("heading", poseEstimate.getHeading());
         telemetry.addData("x correction", FEA.returnX(Drive.getPoseEstimate().getX(), Drive.getPoseEstimate().getY(), Drive.getPoseEstimate().getHeading()));
-        telemetry.addData("x correction", FEA.returnY(Drive.getPoseEstimate().getX(), Drive.getPoseEstimate().getY(), Drive.getPoseEstimate().getHeading()));
+        telemetry.addData("y correction", FEA.returnY(Drive.getPoseEstimate().getX(), Drive.getPoseEstimate().getY(), Drive.getPoseEstimate().getHeading()));
         telemetry.update();
     }
 

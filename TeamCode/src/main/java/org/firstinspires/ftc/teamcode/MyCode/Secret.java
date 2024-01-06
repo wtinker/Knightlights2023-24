@@ -14,8 +14,11 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 public class Secret extends LinearOpMode {
 
     public double leftStartTime, rightStartTime;
+    double xTrim = 0;
+    double yTrim = 0;
     double xCoord, yCoord, rot, startTime;
     SampleMecanumDrive Drive;
+    boolean manualOverride = false;
     public void runOpMode(){
         Output output = new Output(this, hardwareMap);
         Intake intake = new Intake(this, hardwareMap);
@@ -26,7 +29,7 @@ public class Secret extends LinearOpMode {
         telemetry.addData("Finished Initialization", null);
         telemetry.update();
 
-        Trajectory t1;
+        Trajectory Trajright, Trajleft;
 
         waitForStart();
 
@@ -37,33 +40,62 @@ public class Secret extends LinearOpMode {
             yCoord = Drive.getPoseEstimate().getY();
             rot = Drive.getPoseEstimate().getHeading();
 
-            t1 = Drive.trajectoryBuilder(new Pose2d(xCoord, yCoord, rot)).lineTo(new Vector2d(51, -38)).build();
+            Trajright = Drive.trajectoryBuilder(new Pose2d(xCoord, yCoord, rot)).lineToLinearHeading(new Pose2d(51 + xTrim, -38 + yTrim, 0)).build();
+            Trajleft = Drive.trajectoryBuilder(new Pose2d(xCoord, yCoord, rot)).lineToLinearHeading(new Pose2d(51 + xTrim, -26 + yTrim, 0)).build();
+
+            if(gamepad2.dpad_up){xTrim += 0.5;}
+            if(gamepad2.dpad_down){xTrim -= 0.5;}
+            if(gamepad2.dpad_left){yTrim += 0.5;}
+            if(gamepad2.dpad_right){yTrim -= 0.5;}
 
             output.RunOutput();
 
-            if(gamepad1.left_trigger > 0.5){
-                aprilTag.RunAprilTags();
-                if(Storage.targetFound){AprilTagDrive();}
-                else{RunDriveTrain();}}
-            else if(gamepad1.right_trigger > 0.5){
-                Drive.followTrajectory(t1);
-            }
-            else {RunDriveTrain();}
+            if(gamepad1.dpad_left){Drive.followTrajectory(Trajleft);}
+            if(gamepad1.dpad_right){Drive.followTrajectory(Trajright);}
+            RunDriveTrain();
 
-            if(xCoord < -24 && intake.isRaised){intake.Lower();}
-            if(xCoord > -24 && !intake.isRaised){intake.Raise();}
-            if(xCoord < -40 && yCoord > -6 && !intake.isPowered){intake.Start();}
-            if((xCoord > -40 || yCoord < -6) && intake.isPowered){intake.Stop();}
+            if(!manualOverride) {
+                if (xCoord < -24 && intake.isRaised) {
+                    intake.Lower();
+                }
+                if (xCoord > -24 && !intake.isRaised) {
+                    intake.Raise();
+                }
+                if (xCoord < -40 && yCoord > -6 && !intake.isPowered) {
+                    intake.Start();
+                }
+                if ((xCoord > -40 || yCoord < -6) && intake.isPowered) {
+                    intake.Stop();
+                }
+            }
 
             if(gamepad1.right_bumper && rightCooldown()){output.Toggle();}
 
-            if(xCoord > 40 && yCoord < -12 && !output.SlideExtended){output.Extend(FullExtension);}
-            if((xCoord < 40 || yCoord > -12)){output.Retract();}
+            if(!manualOverride) {
+                if (xCoord > 40 && yCoord < -12 && !output.SlideExtended) {
+                    output.Extend(FullExtension);
+                }
+                if ((xCoord < 40 || yCoord > -12)) {
+                    output.Retract();
+                }
+            }
 
             if(gamepad1.dpad_left){Storage.aprilTagTarg = 4;}
             if(gamepad1.dpad_right){Storage.aprilTagTarg = 6;}
 
-            if(gamepad1.x && getRuntime() - startTime > 90){AutoEndgame();}
+            if(gamepad1.x /*&& getRuntime() - startTime > 90*/){
+                manualOverride = true;
+                Trajectory end = Drive.trajectoryBuilder(Drive.getPoseEstimate()).lineToLinearHeading(new Pose2d(41, -34, Math.toRadians(180))).build();
+                Trajectory hang = Drive.trajectoryBuilder(end.end()).lineTo(new Vector2d(11, -34)).build();
+                Drive.followTrajectory(end);
+                output.LaunchDrone();
+                output.Extend(FullExtension);
+                output.RunOutput();
+                sleep(1500);
+                Drive.followTrajectory(hang);
+                output.Retract();
+                output.RunOutput();
+            }
 
         }
 
@@ -122,7 +154,9 @@ public class Secret extends LinearOpMode {
     }
 
     public void AutoEndgame(){
-
+        Trajectory end = Drive.trajectoryBuilder(Drive.getPoseEstimate()).lineToLinearHeading(new Pose2d(36, -36, Math.toRadians(180))).build();
+        Trajectory hang = Drive.trajectoryBuilder(end.end()).lineTo(new Vector2d(50, -26)).build();
+        Drive.followTrajectory(end);
     }
 
 }

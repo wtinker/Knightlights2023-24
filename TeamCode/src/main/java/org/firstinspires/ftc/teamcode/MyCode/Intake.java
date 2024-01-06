@@ -17,7 +17,7 @@ public class Intake {
     public boolean isRaised = true;
     Servo servo;
     double up = 0;
-    double down = 0;
+    double down = 0.38;
     public Intake (LinearOpMode opmode, HardwareMap hardwareMap) {
         myOpMode = opmode;
         hardwareMap = hardwareMap;
@@ -32,7 +32,7 @@ public class Intake {
         myOpMode.telemetry.update();
     }
     public void Start(){
-        intake.setPower(0.9);
+        intake.setPower(1);
         isPowered = true;
     }
     public void Stop(){

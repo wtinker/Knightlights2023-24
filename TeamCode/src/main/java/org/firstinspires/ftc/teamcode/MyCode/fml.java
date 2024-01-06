@@ -20,7 +20,7 @@ public class fml extends LinearOpMode {
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         Servo servo;
-        servo = hardwareMap.get(Servo.class, "Intake Servo");
+        servo = hardwareMap.get(Servo.class, "Intake servo");
         double servopos = 0.0;
         servo.setPosition(servopos);
 

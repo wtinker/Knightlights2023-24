@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Output {
     private LinearOpMode myOpMode = null;
     DcMotor Slide, Slide2;
-    Servo Base, Claw;
+    Servo Base, Claw, Drone;
     int SlideTarget = 0;
     public boolean SlideExtended = false;
     //ClawStatus clawStatus = ClawStatus.OPEN;
@@ -31,8 +31,10 @@ public class Output {
 
         Base = hardwareMap.get(Servo.class, "Base");
         Claw = hardwareMap.get(Servo.class, "Claw");
+        Drone = hardwareMap.get(Servo.class, "Drone");
         Base.setPosition(0);
         Claw.setPosition(0.5);
+        Drone.setPosition(0);
 
         myOpMode.telemetry.addData("Output Initialized", null);
         myOpMode.telemetry.update();
@@ -107,5 +109,8 @@ public class Output {
      */
     public int DetectPixels(){
         return 0;
+    }
+    public void LaunchDrone(){
+        Drone.setPosition(0.3);
     }
 }

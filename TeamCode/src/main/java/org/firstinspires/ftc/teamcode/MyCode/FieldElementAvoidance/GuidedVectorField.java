@@ -1,28 +1,38 @@
 package org.firstinspires.ftc.teamcode.MyCode.FieldElementAvoidance;
 
 public class GuidedVectorField {
-    double GAIN;
+    double xGain, yGain;
+    double range = 24;
     public GuidedVectorField(){
-        GAIN = 0.1;
+        xGain = 0.01;
+        yGain = 1;
     }
-    public GuidedVectorField(double gain){
-        GAIN = gain;
+    public GuidedVectorField(double Xgain, double Ygain){
+        xGain = Xgain;
+        yGain = Ygain;
     }
     public Vector returnVector(double x, double y, double rot){
-        Vector out = new Vector(0, 0);
+        Vector out = new Vector();
+        Vector pos = new Vector(x, y);
 
-        Vector p1 = new Vector(x, y+24, true);
-        Vector p2 = new Vector(x, y+48, true);
-        Vector p3 = new Vector(x, y+72, true);
-        Vector p4 = new Vector(x+24, y+24, true);
-        Vector p5 = new Vector(x+24, y+48, true);
-        Vector p6 = new Vector(x+24, y+72, true);
-        Vector p7 = new Vector(x, y-24, true);
-        Vector p8 = new Vector(x, y-48, true);
-        Vector p9 = new Vector(x, y-72, true);
-        Vector p10 = new Vector(x+24, y-24, true);
-        Vector p11 = new Vector(x+24, y-48, true);
-        Vector p12 = new Vector(x+24, y-72, true);
+        Vector p1 = delta(pos, new Vector(0, -24));
+        Vector p2 = delta(pos, new Vector(0, -48));
+        Vector p3 = delta(pos, new Vector(0, -72));
+        Vector p4 = delta(pos, new Vector(-24, -24));
+        Vector p5 = delta(pos, new Vector(-24, -48));
+        Vector p6 = delta(pos, new Vector(-24, -72));
+        Vector p7 = delta(pos, new Vector(0, 24));
+        Vector p8 = delta(pos, new Vector(0, 48));
+        Vector p9 = delta(pos, new Vector(0, 72));
+        Vector p10 = delta(pos, new Vector(-24, 24));
+        Vector p11 = delta(pos, new Vector(-24, 48));
+        Vector p12 = delta(pos, new Vector(-24, 72));
+        Vector p13 = delta(pos, new Vector(-12, -24));
+        Vector p14 = delta(pos, new Vector(-12, -48));
+        Vector p15 = delta(pos, new Vector(-12, -72));
+        Vector p16 = delta(pos, new Vector(-12, 24));
+        Vector p17 = delta(pos, new Vector(-12, 48));
+        Vector p18 = delta(pos, new Vector(-12, 72));
 
         out.addVector(p1);
         out.addVector(p2);
@@ -36,9 +46,16 @@ public class GuidedVectorField {
         out.addVector(p10);
         out.addVector(p11);
         out.addVector(p12);
+        out.addVector(p13);
+        out.addVector(p14);
+        out.addVector(p15);
+        out.addVector(p16);
+        out.addVector(p17);
+        out.addVector(p18);
 
-        out.rotate(rot * -1);
-        out.scale(GAIN);
+        out.scale(xGain, yGain);
+        out.clip(0.8);
+        out.rotate(-rot);
 
         return out;
     }
@@ -50,4 +67,13 @@ public class GuidedVectorField {
         Vector out = returnVector(x, y, rot);
         return out.getyValue();
     }
+    Vector delta(Vector pos, Vector coord){
+        Vector out = new Vector();
+        coord.scale(-1);
+        Vector sum = Vector.addVectors(pos, coord);
+        if(sum.getMag() <= range){out.addVector(sum);}
+        out.invert();
+        return out;
+    }
+
 }
