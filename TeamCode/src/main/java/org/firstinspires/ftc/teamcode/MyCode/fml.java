@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.MyCode;
 
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -8,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.util.Encoder;
 
 @TeleOp(name = "buh")
@@ -24,6 +26,9 @@ public class fml extends LinearOpMode {
         double servopos = 0.0;
         servo.setPosition(servopos);
 
+        Rev2mDistanceSensor dist;
+        dist = hardwareMap.get(Rev2mDistanceSensor.class, "dist");
+
         waitForStart();
 
         while(opModeIsActive()){
@@ -34,6 +39,7 @@ public class fml extends LinearOpMode {
             if(gamepad1.dpad_down){servopos -= 0.01;}
             telemetry.addData("Motor encoder", motor.getCurrentPosition());
             telemetry.addData("Servo positition", servopos);
+            telemetry.addData("Distance", dist.getDistance(DistanceUnit.CM));
             telemetry.update();
             sleep(50);
         }

@@ -34,13 +34,14 @@ public class Intake {
     public void Start(){
         intake.setPower(1);
         isPowered = true;
+        Lower();
     }
     public void Stop(){
         intake.setPower(0);
         isPowered = false;
     }
     public void Reverse(){
-        intake.setPower(-0.5);
+        intake.setPower(-1);
         isPowered = true;
     }
     public void Toggle(){

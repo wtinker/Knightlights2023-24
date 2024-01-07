@@ -80,8 +80,8 @@ public class Secret extends LinearOpMode {
                 }
             }
 
-            if(gamepad1.dpad_left){Storage.aprilTagTarg = 4;}
-            if(gamepad1.dpad_right){Storage.aprilTagTarg = 6;}
+            //if(gamepad1.dpad_left){Storage.aprilTagTarg = 4;}
+            //if(gamepad1.dpad_right){Storage.aprilTagTarg = 6;}
 
             if(gamepad1.x /*&& getRuntime() - startTime > 90*/){
                 manualOverride = true;

@@ -15,7 +15,7 @@ public class Output {
     int SlideTarget = 0;
     public boolean SlideExtended = false;
     //ClawStatus clawStatus = ClawStatus.OPEN;
-    private boolean scoring = false;
+    boolean scoring = false;
     private double scoreTime;
     public Output (LinearOpMode opmode, HardwareMap hardwareMap) {
         myOpMode = opmode;
@@ -32,7 +32,7 @@ public class Output {
         Base = hardwareMap.get(Servo.class, "Base");
         Claw = hardwareMap.get(Servo.class, "Claw");
         Drone = hardwareMap.get(Servo.class, "Drone");
-        Base.setPosition(0);
+        Base.setPosition(1);
         Claw.setPosition(0.5);
         Drone.setPosition(0);
 
@@ -62,16 +62,16 @@ public class Output {
         Slide.setPower(0.6);
 
         if(!SlideExtended){Descore();}
-        if(myOpMode.getRuntime() - scoreTime > 2){Descore();}
+        //if(myOpMode.getRuntime() - scoreTime > 2){Descore();}
     }
     public void Score(){
         scoring = true;
-        Base.setPosition(0.6);
+        Base.setPosition(0.8);
         scoreTime = myOpMode.getRuntime();
     }
     public void Descore(){
         scoring = false;
-        Base.setPosition(0);
+        Base.setPosition(1);
     }
     public void Toggle(){
         if(scoring){Descore();}
