@@ -16,7 +16,7 @@ public class Intake {
     public boolean isPowered = false;
     public boolean isRaised = true;
     Servo servo;
-    double up = 0;
+    double up = 0.1;
     double down = 0.38;
     public Intake (LinearOpMode opmode, HardwareMap hardwareMap) {
         myOpMode = opmode;

@@ -14,18 +14,20 @@ public class MeepMeepTesting {
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(30, 30, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(12, 63, Math.toRadians(0)))
-                                .splineToSplineHeading(new Pose2d(34, 25, 0), Math.toRadians(-90))
+                        drive.trajectorySequenceBuilder(new Pose2d(-36, -62, Math.toRadians(180)))
+                                .splineToSplineHeading(new Pose2d(-56, -36, Math.toRadians(180)), Math.toRadians(90))
+                                .splineToSplineHeading(new Pose2d(-56, -25, Math.toRadians(180)), Math.toRadians(90))
                                 .addDisplacementMarker(()->{/*scan*/})
                                 .waitSeconds(1)
-                                //left side (long scan)
-                                .lineTo(new Vector2d(12, 30))
-                                .addDisplacementMarker(()->{/*drop pixel*/})
-                                .waitSeconds(2)
-                                .lineTo(new Vector2d(51, 38))
+                                //right side
+                                .lineTo(new Vector2d(-46, -16))
+                                .turn(Math.toRadians(-90))
+                                .addDisplacementMarker(()->{})
+                                .splineTo(new Vector2d(-24, -12), Math.toRadians(0))
+                                .splineTo(new Vector2d(36, -24), Math.toRadians(-90))
+                                .splineTo(new Vector2d(51, -28), Math.toRadians(0))
                                 .addDisplacementMarker(()->{/*score*/})
-                                .waitSeconds(5)
-                                .lineTo(new Vector2d(48, 60))
+                                .lineTo(new Vector2d(48, -60))
                                 .build()
                 );
 

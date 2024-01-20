@@ -22,10 +22,11 @@ public class RedTeleop extends LinearOpMode {
     double yTrim = 0;
     double xCoord, yCoord, rot, startTime;
     SampleMecanumDrive Drive;
-    boolean manualOverride = false;
+    boolean manualOverride = true;
     boolean intakeOverride = false;
     boolean outputOverride = false;
     boolean fieldCentric = true;
+    boolean mark = false;
     Vector2d input;
     public void runOpMode(){
         Output output = new Output(this, hardwareMap);
@@ -33,7 +34,7 @@ public class RedTeleop extends LinearOpMode {
         AprilTag aprilTag = new AprilTag(this, hardwareMap);
         Drive = new SampleMecanumDrive(hardwareMap);
         Drive.setPoseEstimate(Storage.poseStorage);
-        int FullExtension = 2700;
+        int FullExtension = 1670;
 
         telemetry.addData("Finished Initialization", null);
         telemetry.update();
@@ -57,6 +58,11 @@ public class RedTeleop extends LinearOpMode {
             if(gamepad2.dpad_down){xTrim -= 0.5;}
             if(gamepad2.dpad_left){yTrim += 0.5;}
             if(gamepad2.dpad_right){yTrim -= 0.5;}
+
+            if(getRuntime() - startTime > 5 && !mark){
+                manualOverride = false;
+                mark = true;
+            }
 
             Trajright = Drive.trajectoryBuilder(new Pose2d(xCoord, yCoord, rot)).lineToLinearHeading(new Pose2d(51 + xTrim, -38 + yTrim, 0)).build();
             Trajleft = Drive.trajectoryBuilder(new Pose2d(xCoord, yCoord, rot)).lineToLinearHeading(new Pose2d(51 + xTrim, -26 + yTrim, 0)).build();

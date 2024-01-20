@@ -13,9 +13,8 @@ import org.firstinspires.ftc.teamcode.MyCode.Storage;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
-//@Disabled
-@Autonomous(name = "RedNearSideFull")
-public class RedNearSideFull extends LinearOpMode {
+@Autonomous(name = "BlueFarSideFull")
+public class BlueFarSideFull extends LinearOpMode {
 
     enum robotState {
         FIRST,
@@ -38,35 +37,47 @@ public class RedNearSideFull extends LinearOpMode {
         boolean left = false;
         boolean middle = false;
         boolean right = false;
-        Pose2d startpose = new Pose2d(12, -62, Math.toRadians(0));
+        Pose2d startpose = new Pose2d(-34, 62, Math.toRadians(180));
         TrajectorySequence t1 = drive.trajectorySequenceBuilder(startpose)
-                .splineToSplineHeading(new Pose2d(37, -34, 0), Math.toRadians(90))
+                .splineToSplineHeading(new Pose2d(-56, 36, Math.toRadians(180)), Math.toRadians(-90))
+                .splineToSplineHeading(new Pose2d(-56, 25, Math.toRadians(180)), Math.toRadians(-90))
                 .addTemporalMarker(()->{done = true;})
                 .build();
         TrajectorySequence trajright1 = drive.trajectorySequenceBuilder(t1.end())
-                .lineTo(new Vector2d(32, -35))
-                .addDisplacementMarker(()->{intake.Lower(); sleep(500); intake.Raise();})
-                .lineTo(new Vector2d(51, -42))
+                .lineTo(new Vector2d(-34, 34))
+                .waitSeconds(1)
+                .addDisplacementMarker(()->{intake.Lower(); sleep(250); intake.Raise();})
+                .splineTo(new Vector2d(-30, 12), Math.toRadians(0))
+                .splineTo(new Vector2d(36, 24), Math.toRadians(90))
+                .splineTo(new Vector2d(51, 30), Math.toRadians(0))
                 .addTemporalMarker(()->{done = true;})
                 .build();
         TrajectorySequence trajmid1 = drive.trajectorySequenceBuilder(t1.end())
-                .splineToConstantHeading(new Vector2d(25, -26), Math.toRadians(180))
-                .addDisplacementMarker(()->{intake.Lower(); sleep(500); intake.Raise();})
-                .lineTo(new Vector2d(51, -37))
+                .lineTo(new Vector2d(-36, 14))
+                .turn(Math.toRadians(-90))
+                .addDisplacementMarker(()->{intake.Lower(); sleep(250); intake.Raise();})
+                .splineTo(new Vector2d(-24, 12), Math.toRadians(0))
+                .splineTo(new Vector2d(36, 24), Math.toRadians(90))
+                .splineTo(new Vector2d(51, 37), Math.toRadians(0))
                 .addTemporalMarker(()->{done = true;})
                 .build();
         TrajectorySequence trajleft1 = drive.trajectorySequenceBuilder(t1.end())
-                .lineTo(new Vector2d(10, -33))
-                .addDisplacementMarker(()->{intake.Lower(); sleep(500); intake.Raise();})
-                .lineTo(new Vector2d(51, -30))
+                .lineTo(new Vector2d(-46, 16))
+                .turn(Math.toRadians(-90))
+                .addDisplacementMarker(()->{intake.Lower(); sleep(250); intake.Raise();})
+                .splineTo(new Vector2d(-24, 12), Math.toRadians(0))
+                .splineTo(new Vector2d(36, 24), Math.toRadians(90))
+                .splineTo(new Vector2d(51, 42), Math.toRadians(0))
                 .addTemporalMarker(()->{done = true;})
                 .build();
+
         TrajectorySequence trajright2 = drive.trajectorySequenceBuilder(trajright1.end())
-                .lineTo(new Vector2d(48, -60)).addTemporalMarker(()->{done = true;}).build();
+                .lineTo(new Vector2d(48, 12)).addTemporalMarker(()->{done = true;}).build();
         TrajectorySequence trajmid2 = drive.trajectorySequenceBuilder(trajmid1.end())
-                .lineTo(new Vector2d(48, -60)).addTemporalMarker(()->{done = true;}).build();
+                .lineTo(new Vector2d(48, 12)).addTemporalMarker(()->{done = true;}).build();
         TrajectorySequence trajleft2 = drive.trajectorySequenceBuilder(trajleft1.end())
-                .lineTo(new Vector2d(48, -60)).addTemporalMarker(()->{done = true;}).build();
+                .lineTo(new Vector2d(48, 12)).addTemporalMarker(()->{done = true;}).build();
+
 
         drive.setPoseEstimate(startpose);
         RedFarSideFull.robotState robotstate = RedFarSideFull.robotState.FIRST;
@@ -74,22 +85,22 @@ public class RedNearSideFull extends LinearOpMode {
 
         drive.followTrajectorySequenceAsync(t1);
 
-        out: while(opModeIsActive() && running){
+        out: while(opModeIsActive()&&running){
             //limit switch code
             telemetry.addData("current state", robotstate);
             telemetry.update();
             drive.update();
             switch (robotstate){
                 case FIRST:
-                    if(done&&!drive.isBusy()){
+                    if(done){
                         done = false;
                         double distance = dist.getDistance(DistanceUnit.CM);
-                        if(37<distance && distance<50){robotstate = RedFarSideFull.robotState.LEFT1; drive.followTrajectorySequenceAsync(trajleft1);}
-                        else if(distance<17){robotstate = RedFarSideFull.robotState.RIGHT1; drive.followTrajectorySequenceAsync(trajright1);}
+                        if(distance<17){robotstate = RedFarSideFull.robotState.RIGHT1; drive.followTrajectorySequenceAsync(trajright1);}
+                        else if(37<distance && distance<50){robotstate = RedFarSideFull.robotState.LEFT1; drive.followTrajectorySequenceAsync(trajleft1);}
                         else {robotstate = RedFarSideFull.robotState.MID1; drive.followTrajectorySequenceAsync(trajmid1);}
                     } break;
                 case LEFT1:
-                    if(done&&!drive.isBusy()){
+                    if(done){
                         done = false;
                         output.Extend(730);
                         sleep(1500);
@@ -102,7 +113,7 @@ public class RedNearSideFull extends LinearOpMode {
                         drive.followTrajectorySequenceAsync(trajleft2);
                     } break;
                 case RIGHT1:
-                    if(done&&!drive.isBusy()){
+                    if(done){
                         done = false;
                         output.Extend(730);
                         sleep(1500);
@@ -115,7 +126,7 @@ public class RedNearSideFull extends LinearOpMode {
                         drive.followTrajectorySequenceAsync(trajright2);
                     } break;
                 case MID1:
-                    if(done&&!drive.isBusy()){
+                    if(done){
                         done = false;
                         output.Extend(730);
                         sleep(1500);
@@ -134,8 +145,8 @@ public class RedNearSideFull extends LinearOpMode {
                 case MID2:
                     if(done){robotstate = RedFarSideFull.robotState.END;} break;
                 case END:
-                    Storage.poseStorage = drive.getPoseEstimate();
                     running = false;
+                    Storage.poseStorage = drive.getPoseEstimate();
                     break;
             }
         }
