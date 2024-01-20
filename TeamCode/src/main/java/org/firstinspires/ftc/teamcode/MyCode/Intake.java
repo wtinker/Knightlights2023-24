@@ -16,7 +16,7 @@ public class Intake {
     public boolean isPowered = false;
     public boolean isRaised = true;
     Servo servo;
-    double up = 0;
+    double up = 0.1;
     double down = 0.38;
     public Intake (LinearOpMode opmode, HardwareMap hardwareMap) {
         myOpMode = opmode;
@@ -34,13 +34,14 @@ public class Intake {
     public void Start(){
         intake.setPower(1);
         isPowered = true;
+        Lower();
     }
     public void Stop(){
         intake.setPower(0);
         isPowered = false;
     }
     public void Reverse(){
-        intake.setPower(-0.5);
+        intake.setPower(-1);
         isPowered = true;
     }
     public void Toggle(){

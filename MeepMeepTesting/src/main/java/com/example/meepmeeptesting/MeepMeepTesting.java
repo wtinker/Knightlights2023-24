@@ -12,18 +12,22 @@ public class MeepMeepTesting {
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-                .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
+                .setConstraints(30, 30, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(12, 63, Math.toRadians(180)))
-                                .lineTo(new Vector2d(12, 34))
+                        drive.trajectorySequenceBuilder(new Pose2d(-36, -62, Math.toRadians(180)))
+                                .splineToSplineHeading(new Pose2d(-56, -36, Math.toRadians(180)), Math.toRadians(90))
+                                .splineToSplineHeading(new Pose2d(-56, -25, Math.toRadians(180)), Math.toRadians(90))
+                                .addDisplacementMarker(()->{/*scan*/})
+                                .waitSeconds(1)
+                                //right side
+                                .lineTo(new Vector2d(-46, -16))
                                 .turn(Math.toRadians(-90))
-                                .turn(Math.toRadians(-90))
-                                .splineToConstantHeading(new Vector2d(12, 48), Math.toRadians(0))
-                                .splineTo(new Vector2d(51, 42), Math.toRadians(0))
-                                .strafeRight(10)
-                                .back(6)
-                                .splineToLinearHeading(new Pose2d(36, 24, Math.toRadians(45)), Math.toRadians(0))
-                                .lineTo(new Vector2d(48, 12))
+                                .addDisplacementMarker(()->{})
+                                .splineTo(new Vector2d(-24, -12), Math.toRadians(0))
+                                .splineTo(new Vector2d(36, -24), Math.toRadians(-90))
+                                .splineTo(new Vector2d(51, -28), Math.toRadians(0))
+                                .addDisplacementMarker(()->{/*score*/})
+                                .lineTo(new Vector2d(48, -60))
                                 .build()
                 );
 

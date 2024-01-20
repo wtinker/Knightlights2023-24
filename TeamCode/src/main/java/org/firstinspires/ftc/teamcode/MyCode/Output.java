@@ -15,7 +15,7 @@ public class Output {
     int SlideTarget = 0;
     public boolean SlideExtended = false;
     //ClawStatus clawStatus = ClawStatus.OPEN;
-    private boolean scoring = false;
+    boolean scoring = false;
     private double scoreTime;
     public Output (LinearOpMode opmode, HardwareMap hardwareMap) {
         myOpMode = opmode;
@@ -27,12 +27,13 @@ public class Output {
 
         Slide2 = hardwareMap.get(DcMotor.class, "Slide223");
         Slide2.setDirection(DcMotorSimple.Direction.REVERSE);
-        Slide2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        Slide2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Slide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         Base = hardwareMap.get(Servo.class, "Base");
         Claw = hardwareMap.get(Servo.class, "Claw");
         Drone = hardwareMap.get(Servo.class, "Drone");
-        Base.setPosition(0);
+        Base.setPosition(1);
         Claw.setPosition(0.5);
         Drone.setPosition(0);
 
@@ -41,6 +42,8 @@ public class Output {
     }
     public void Extend(int targ){
         SlideTarget = targ;
+        SlideExtended = true;
+        RunOutput();
         //Double();
     }
     public void Adjust(int value){
@@ -50,37 +53,38 @@ public class Output {
     public void Retract(){
         SlideExtended = false;
         SlideTarget = 0;
+        RunOutput();
         //Open();
     }
     public void Climb(){
         SlideExtended = false;
         SlideTarget = 0;
+        RunOutput();
     }
     public void RunOutput(){
         Slide.setTargetPosition(SlideTarget);
         Slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        Slide.setPower(0.6);
+        Slide.setPower(1);
 
         if(!SlideExtended){Descore();}
-        if(myOpMode.getRuntime() - scoreTime > 2){Descore();}
+        //if(myOpMode.getRuntime() - scoreTime > 2 && scoring){Descore();}
     }
     public void Score(){
         scoring = true;
-        Base.setPosition(0.6);
+        Base.setPosition(0.8);
         scoreTime = myOpMode.getRuntime();
     }
     public void Descore(){
         scoring = false;
-        Base.setPosition(0);
+        Base.setPosition(1);
     }
     public void Toggle(){
         if(scoring){Descore();}
         else{Score();}
     }
     public void Single(){
-        Claw.setPosition(0.525);
-        //clawStatus = ClawStatus.SINGLE;
-        if(SlideExtended){Base.setPosition(0);}
+        Base.setPosition(0.87);
+        scoring = true;
     }
     public void Double(){
         Claw.setPosition(0.5);

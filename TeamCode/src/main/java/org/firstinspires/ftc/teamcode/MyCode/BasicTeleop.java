@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.MyCode;
 import com.acmerobotics.roadrunner.drive.MecanumDrive;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -12,8 +13,11 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 public class BasicTeleop extends LinearOpMode {
 
     public double leftStartTime, rightStartTime;
-
+    double xTrim = 0;
+    double yTrim = 0;
+    double xCoord, yCoord, rot, startTime;
     SampleMecanumDrive Drive;
+    boolean manualOverride = false;
     public void runOpMode(){
         Output output = new Output(this, hardwareMap);
         Intake intake = new Intake(this, hardwareMap);
@@ -24,27 +28,67 @@ public class BasicTeleop extends LinearOpMode {
         telemetry.addData("Finished Initialization", null);
         telemetry.update();
 
+        Trajectory Trajright, Trajleft;
+
         waitForStart();
 
         while(opModeIsActive()){
 
+            xCoord = Drive.getPoseEstimate().getX();
+            yCoord = Drive.getPoseEstimate().getY();
+            rot = Drive.getPoseEstimate().getHeading();
+
+            Trajright = Drive.trajectoryBuilder(new Pose2d(xCoord, yCoord, rot)).lineToLinearHeading(new Pose2d(51 + xTrim, -38 + yTrim, 0)).build();
+            Trajleft = Drive.trajectoryBuilder(new Pose2d(xCoord, yCoord, rot)).lineToLinearHeading(new Pose2d(51 + xTrim, -26 + yTrim, 0)).build();
+
+            if(gamepad2.dpad_up){xTrim += 0.5;}
+            if(gamepad2.dpad_down){xTrim -= 0.5;}
+            if(gamepad2.dpad_left){yTrim += 0.5;}
+            if(gamepad2.dpad_right){yTrim -= 0.5;}
+
             output.RunOutput();
 
-            if(gamepad1.left_trigger > 0.5){
-                aprilTag.RunAprilTags();
-                if(Storage.targetFound){AprilTagDrive();}
-                else{RunDriveTrain();}}
-            else {RunDriveTrain();}
+            if(gamepad1.dpad_left){Drive.followTrajectory(Trajleft);}
+            if(gamepad1.dpad_right){Drive.followTrajectory(Trajright);}
+            RunDriveTrain();
 
-            if(gamepad1.left_bumper && leftCooldown()){intake.Toggle();}
-            if(gamepad1.b){intake.Reverse();}
+                if (gamepad1.dpad_down) {
+                    intake.Lower();
+                }
+                if (gamepad1.dpad_up) {
+                    intake.Raise();
+                }
+                if (gamepad1.left_bumper && leftCooldown()) {
+                    intake.Toggle();
+                }
+
+
             if(gamepad1.right_bumper && rightCooldown()){output.Toggle();}
 
-            if(gamepad1.y){output.Extend(FullExtension);}
-            if(gamepad1.a){output.Retract();}
+                if (gamepad1.y) {
+                    output.Extend(FullExtension);
+                }
+                if (gamepad1.a) {
+                    output.Retract();
+                }
 
-            if(gamepad1.dpad_left){Storage.aprilTagTarg = 4;}
-            if(gamepad1.dpad_right){Storage.aprilTagTarg = 6;}
+
+            //if(gamepad1.dpad_left){Storage.aprilTagTarg = 4;}
+            //if(gamepad1.dpad_right){Storage.aprilTagTarg = 6;}
+
+            if(gamepad1.x /*&& getRuntime() - startTime > 90*/){
+                manualOverride = true;
+                Trajectory end = Drive.trajectoryBuilder(Drive.getPoseEstimate()).lineToLinearHeading(new Pose2d(41, -34, Math.toRadians(180))).build();
+                Trajectory hang = Drive.trajectoryBuilder(end.end()).lineTo(new Vector2d(11, -34)).build();
+                Drive.followTrajectory(end);
+                output.LaunchDrone();
+                output.Extend(FullExtension);
+                output.RunOutput();
+                sleep(1500);
+                Drive.followTrajectory(hang);
+                output.Retract();
+                output.RunOutput();
+            }
 
         }
 
