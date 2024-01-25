@@ -50,16 +50,16 @@ public class RedFarSideFull extends LinearOpMode {
                 .addDisplacementMarker(()->{intake.Lower(); sleep(250); intake.Raise();})
                 .splineTo(new Vector2d(-30, -12), Math.toRadians(0))
                 .splineTo(new Vector2d(36, -24), Math.toRadians(-90))
-                .splineTo(new Vector2d(51, -42), Math.toRadians(0))
+                .splineTo(new Vector2d(50, -42), Math.toRadians(0))
                 .addTemporalMarker(()->{done = true;})
                 .build();
         TrajectorySequence trajmid1 = drive.trajectorySequenceBuilder(t1.end())
-                .lineTo(new Vector2d(-36, -14))
+                .lineTo(new Vector2d(-36, -13))
                 .turn(Math.toRadians(-90))
                 .addDisplacementMarker(()->{intake.Lower(); sleep(250); intake.Raise();})
                 .splineTo(new Vector2d(-24, -12), Math.toRadians(0))
                 .splineTo(new Vector2d(36, -24), Math.toRadians(-90))
-                .splineTo(new Vector2d(51, -37), Math.toRadians(0))
+                .splineTo(new Vector2d(50, -37), Math.toRadians(0))
                 .addTemporalMarker(()->{done = true;})
                 .build();
         TrajectorySequence trajleft1 = drive.trajectorySequenceBuilder(t1.end())
@@ -68,7 +68,7 @@ public class RedFarSideFull extends LinearOpMode {
                 .addDisplacementMarker(()->{intake.Lower(); sleep(250); intake.Raise();})
                 .splineTo(new Vector2d(-24, -12), Math.toRadians(0))
                 .splineTo(new Vector2d(36, -24), Math.toRadians(-90))
-                .splineTo(new Vector2d(51, -30), Math.toRadians(0))
+                .splineTo(new Vector2d(50, -30), Math.toRadians(0))
                 .addTemporalMarker(()->{done = true;})
                 .build();
 
@@ -83,6 +83,8 @@ public class RedFarSideFull extends LinearOpMode {
         drive.setPoseEstimate(startpose);
         robotState robotstate = robotState.FIRST;
         waitForStart();
+        //delay code:
+        sleep(8000);
 
         drive.followTrajectorySequenceAsync(t1);
 

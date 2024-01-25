@@ -17,9 +17,11 @@ public class fml extends LinearOpMode {
 
     public void runOpMode(){
 
-        DcMotorEx motor;
-        motor = hardwareMap.get(DcMotorEx.class, "Slide312");
-        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //DcMotorEx motor;
+        //motor = hardwareMap.get(DcMotorEx.class, "Slide312");
+        //motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        Output output = new Output(this, hardwareMap);
 
         Servo servo;
         servo = hardwareMap.get(Servo.class, "Intake servo");
@@ -30,6 +32,7 @@ public class fml extends LinearOpMode {
         dist = hardwareMap.get(Rev2mDistanceSensor.class, "dist");
 
         waitForStart();
+        output.SetTime(getRuntime());
 
         while(opModeIsActive()){
             servo.setPosition(servopos);
@@ -37,9 +40,11 @@ public class fml extends LinearOpMode {
             if(gamepad1.a){servopos -= 0.1;}
             if(gamepad1.dpad_up){servopos += 0.01;}
             if(gamepad1.dpad_down){servopos -= 0.01;}
-            telemetry.addData("Motor encoder", motor.getCurrentPosition());
+            if(gamepad1.right_bumper){output.Extend(1000);}
+            if(gamepad1.left_bumper){output.Retract();}
+            output.SlidePID(getRuntime());
+            //telemetry.addData("Motor encoder", motor.getCurrentPosition());
             telemetry.addData("Servo positition", servopos);
-            telemetry.addData("Distance", dist.getDistance(DistanceUnit.CM));
             telemetry.update();
             sleep(50);
         }

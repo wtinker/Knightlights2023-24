@@ -29,13 +29,13 @@ public class BlueTeleopBetter extends LinearOpMode {
         MANUALSLOW,
         ENDGAME
     }
-
+    boolean running = true;
     public double leftStartTime, rightStartTime;
     double xTrim = 0;
     double yTrim = 0;
     double xCoord, yCoord, rot, startTime;
     SampleMecanumDrive Drive;
-    boolean fieldCentric = true;
+    boolean fieldCentric = false;
     boolean mark = false;
     final double slowspeed = 0.5;
     double timeout = 5;
@@ -44,6 +44,7 @@ public class BlueTeleopBetter extends LinearOpMode {
         Output output = new Output(this, hardwareMap);
         Intake intake = new Intake(this, hardwareMap);
         AprilTag aprilTag = new AprilTag(this, hardwareMap);
+        RGB rgb = new RGB(this, hardwareMap);
         Drive = new SampleMecanumDrive(hardwareMap);
         Drive.setPoseEstimate(Storage.poseStorage);
         int FullExtension = 1670;
@@ -56,7 +57,9 @@ public class BlueTeleopBetter extends LinearOpMode {
         robotState robotstate = robotState.FULLMANUAL;
         waitForStart();
         startTime = getRuntime();
-        out: while(opModeIsActive()){
+        output.SetTime(getRuntime());
+        rgb.SetBlue();
+        out: while(opModeIsActive()&&running){
             telemetry.addData("current state", robotstate);
             telemetry.addData("field centric", fieldCentric);
             xCoord = Drive.getPoseEstimate().getX();
@@ -82,7 +85,9 @@ public class BlueTeleopBetter extends LinearOpMode {
             if(gamepad2.y){robotstate = robotState.FULLAUTO; mark = true;}
             if(gamepad1.dpad_left){Drive.followTrajectory(Trajleft);}
             if(gamepad1.dpad_right){Drive.followTrajectory(Trajright);}
-            if(getRuntime() - startTime > timeout && !mark){robotstate = robotState.FULLAUTO;}
+            output.SlidePID(getRuntime());
+            rgb.Run(getRuntime() - startTime);
+            //if(getRuntime() - startTime > timeout && !mark){robotstate = robotState.FULLAUTO;}
 
             switch (robotstate){
                 case FULLAUTO:
@@ -94,9 +99,9 @@ public class BlueTeleopBetter extends LinearOpMode {
                     if(gamepad1.b){intake.Reverse(); robotstate = robotState.MANUALIN;}
                     if (xCoord > 40 && yCoord > 12) {output.Extend(FullExtension); robotstate = robotState.AUTOSLOW;}
                     if (!(xCoord > 40 && yCoord > 12)) {output.Retract();}
-                    if(gamepad1.x){robotstate = robotState.ENDGAME;}
-                    output.RunOutput();
+                    if(gamepad1.x){output.Climb();}
                     RunDriveTrain();
+                    break;
                 case AUTOSLOW:
                     if (xCoord < -24 && yCoord < 0) {intake.Lower();}
                     if (!(xCoord < -24 && yCoord < 0)) {intake.Raise();}
@@ -106,9 +111,9 @@ public class BlueTeleopBetter extends LinearOpMode {
                     if(gamepad1.b){intake.Reverse(); robotstate = robotState.MANUALIN;}
                     if (xCoord > 40 && yCoord > 12) {output.Extend(FullExtension);}
                     if (!(xCoord > 40 && yCoord > 12)) {output.Retract(); robotstate = robotState.FULLAUTO;}
-                    if(gamepad1.x){robotstate = robotState.ENDGAME;}
-                    output.RunOutput();
+                    if(gamepad1.x){output.Climb();}
                     RunDriveTrainSlow();
+                    break;
                 case FULLMANUAL:
                     if(gamepad1.dpad_down){intake.Lower();}
                     if(gamepad1.dpad_up){intake.Raise(); robotstate = robotState.MANUALSLOW;}
@@ -117,9 +122,9 @@ public class BlueTeleopBetter extends LinearOpMode {
                     if(gamepad1.b){intake.Reverse(); robotstate = robotState.MANUALIN;}
                     if(gamepad1.y){output.Extend(FullExtension); robotstate = robotState.MANUALSLOW;}
                     if(gamepad1.a){output.Retract();}
-                    if(gamepad1.x){output.LaunchDrone();}
-                    output.RunOutput();
+                    if(gamepad1.x){output.Climb();}
                     RunDriveTrain();
+                    break;
                 case MANUALSLOW:
                     if(gamepad1.dpad_down){intake.Lower(); robotstate = robotState.FULLMANUAL;}
                     if(gamepad1.dpad_up){intake.Raise();}
@@ -128,9 +133,9 @@ public class BlueTeleopBetter extends LinearOpMode {
                     if(gamepad1.b){intake.Reverse(); robotstate = robotState.MANUALIN;}
                     if(gamepad1.y){output.Extend(FullExtension);}
                     if(gamepad1.a){output.Retract(); robotstate = robotState.FULLMANUAL;}
-                    if(gamepad1.x){output.LaunchDrone();}
-                    output.RunOutput();
+                    if(gamepad1.x){output.Climb();}
                     RunDriveTrainSlow();
+                    break;
                 case MANUALIN:
                     if(gamepad1.dpad_down){intake.Lower();}
                     if(gamepad1.dpad_up){intake.Raise(); robotstate = robotState.MANUALINSLOW;}
@@ -139,9 +144,9 @@ public class BlueTeleopBetter extends LinearOpMode {
                     if(gamepad1.b){intake.Reverse(); robotstate = robotState.MANUALIN;}
                     if (xCoord > 40 && yCoord > 12) {output.Extend(FullExtension); robotstate = robotState.MANUALINSLOW;}
                     if (!(xCoord > 40 && yCoord > 12)) {output.Retract();}
-                    if(gamepad1.x){output.LaunchDrone();}
-                    output.RunOutput();
+                    if(gamepad1.x){output.Climb();}
                     RunDriveTrain();
+                    break;
                 case MANUALINSLOW:
                     if(gamepad1.dpad_down){intake.Lower(); robotstate = robotState.MANUALIN;}
                     if(gamepad1.dpad_up){intake.Raise();}
@@ -150,9 +155,9 @@ public class BlueTeleopBetter extends LinearOpMode {
                     if(gamepad1.b){intake.Reverse(); robotstate = robotState.MANUALIN;}
                     if (xCoord > 40 && yCoord > 12) {output.Extend(FullExtension);}
                     if (!(xCoord > 40 && yCoord > 12)) {output.Retract(); robotstate = robotState.MANUALOUT;}
-                    if(gamepad1.x){output.LaunchDrone();}
-                    output.RunOutput();
+                    if(gamepad1.x){output.Climb();}
                     RunDriveTrainSlow();
+                    break;
                 case MANUALOUT:
                     if (xCoord < -24 && yCoord < 0) {intake.Lower();}
                     if (!(xCoord < -24 && yCoord < 0)) {intake.Raise();}
@@ -162,9 +167,9 @@ public class BlueTeleopBetter extends LinearOpMode {
                     if(gamepad1.b){intake.Reverse(); robotstate = robotState.MANUALIN;}
                     if(gamepad1.y){output.Extend(FullExtension);}
                     if(gamepad1.a){output.Retract();}
-                    if(gamepad1.x){output.LaunchDrone();}
-                    output.RunOutput();
+                    if(gamepad1.x){output.Climb();}
                     RunDriveTrain();
+                    break;
                 case MANUALOUTSLOW:
                     if (xCoord < -24 && yCoord < 0) {intake.Lower();}
                     if (!(xCoord < -24 && yCoord < 0)) {intake.Raise();}
@@ -174,9 +179,9 @@ public class BlueTeleopBetter extends LinearOpMode {
                     if(gamepad1.b){intake.Reverse(); robotstate = robotState.MANUALIN;}
                     if(gamepad1.y){output.Extend(FullExtension);}
                     if(gamepad1.a){output.Retract();}
-                    if(gamepad1.x){output.LaunchDrone();}
-                    output.RunOutput();
+                    if(gamepad1.x){output.Climb();}
                     RunDriveTrainSlow();
+                    break;
                 case ENDGAME:
                     Trajectory end = Drive.trajectoryBuilder(Drive.getPoseEstimate()).lineToLinearHeading(new Pose2d(41, -34, Math.toRadians(180))).build();
                     Trajectory hang = Drive.trajectoryBuilder(end.end()).lineTo(new Vector2d(11, -34)).build();
@@ -190,7 +195,8 @@ public class BlueTeleopBetter extends LinearOpMode {
                     while(Drive.isBusy()){}
                     output.Retract();
                     output.RunOutput();
-                    break out;
+                    running = false;
+                    break;
             }
 
         }

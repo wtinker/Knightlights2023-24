@@ -54,7 +54,7 @@ public class BlueFarSideFull extends LinearOpMode {
                 .build();
         TrajectorySequence trajmid1 = drive.trajectorySequenceBuilder(t1.end())
                 .lineTo(new Vector2d(-36, 14))
-                .turn(Math.toRadians(-90))
+                .turn(Math.toRadians(90))
                 .addDisplacementMarker(()->{intake.Lower(); sleep(250); intake.Raise();})
                 .splineTo(new Vector2d(-24, 12), Math.toRadians(0))
                 .splineTo(new Vector2d(36, 24), Math.toRadians(90))
@@ -63,7 +63,7 @@ public class BlueFarSideFull extends LinearOpMode {
                 .build();
         TrajectorySequence trajleft1 = drive.trajectorySequenceBuilder(t1.end())
                 .lineTo(new Vector2d(-46, 16))
-                .turn(Math.toRadians(-90))
+                .turn(Math.toRadians(90))
                 .addDisplacementMarker(()->{intake.Lower(); sleep(250); intake.Raise();})
                 .splineTo(new Vector2d(-24, 12), Math.toRadians(0))
                 .splineTo(new Vector2d(36, 24), Math.toRadians(90))

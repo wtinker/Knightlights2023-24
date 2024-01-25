@@ -17,18 +17,27 @@ public class Output {
     //ClawStatus clawStatus = ClawStatus.OPEN;
     boolean scoring = false;
     private double scoreTime;
+    boolean disable = false;
+    double prevtime = 0;
+    static double kP = 0.0025;
+    static double kI = 0.00;
+    static double kD = 0.0000;
+    double preverror = 0;
+    double Pgain = 0;
+    double Igain = 0;
+    double Dgain = 0;
     public Output (LinearOpMode opmode, HardwareMap hardwareMap) {
         myOpMode = opmode;
         hardwareMap = hardwareMap;
 
         Slide = hardwareMap.get(DcMotor.class, "Slide312");
-        Slide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         Slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Slide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         Slide2 = hardwareMap.get(DcMotor.class, "Slide223");
-        Slide2.setDirection(DcMotorSimple.Direction.REVERSE);
-        Slide2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         Slide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Slide2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        Slide2.setDirection(DcMotorSimple.Direction.REVERSE);
 
         Base = hardwareMap.get(Servo.class, "Base");
         Claw = hardwareMap.get(Servo.class, "Claw");
@@ -40,10 +49,13 @@ public class Output {
         myOpMode.telemetry.addData("Output Initialized", null);
         myOpMode.telemetry.update();
     }
+    public void SetTime(double runtime){
+        prevtime = runtime;
+    }
     public void Extend(int targ){
         SlideTarget = targ;
         SlideExtended = true;
-        RunOutput();
+        //RunOutput();
         //Double();
     }
     public void Adjust(int value){
@@ -53,21 +65,40 @@ public class Output {
     public void Retract(){
         SlideExtended = false;
         SlideTarget = 0;
-        RunOutput();
+        //Slide2.setPower(-Slide.getPower());
+        //RunOutput();
         //Open();
     }
-    public void Climb(){
-        SlideExtended = false;
-        SlideTarget = 0;
-        RunOutput();
-    }
     public void RunOutput(){
+        if(!disable){
         Slide.setTargetPosition(SlideTarget);
         Slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         Slide.setPower(1);
-
+        //if(Math.abs(Slide.getCurrentPosition() - SlideTarget) < 100){Slide2.setPower(0);}
         if(!SlideExtended){Descore();}
+        //Slide2.setPower(-Slide.getPower());
         //if(myOpMode.getRuntime() - scoreTime > 2 && scoring){Descore();}
+    }}
+    public void SlidePID(double runtime){
+        double elapsed = runtime - prevtime;
+        double error = SlideTarget - Slide.getCurrentPosition();
+        Pgain = kP * error;
+        Igain += kI * error * elapsed;
+        Dgain = kD * (error - preverror) / elapsed;
+        double gain = Pgain + Igain + Dgain;
+        if (gain > 1) {gain = 1;}
+        if (gain < -1) {gain = -1;}
+        Slide.setPower(gain);
+        Slide2.setPower(gain);
+        prevtime = runtime;
+        preverror = error;
+        if(!SlideExtended){Descore();}
+        myOpMode.telemetry.addData("error:", error);
+    }
+    public void Climb(){
+        SlideTarget = 0;
+        SlideExtended = false;
+        Slide2.setPower(-Slide.getPower());
     }
     public void Score(){
         scoring = true;
@@ -86,31 +117,6 @@ public class Output {
         Base.setPosition(0.87);
         scoring = true;
     }
-    public void Double(){
-        Claw.setPosition(0.5);
-        //clawStatus = ClawStatus.DOUBLE;
-        if(SlideExtended){Base.setPosition(0);}
-    }
-    public void Open(){
-        Claw.setPosition(0.6);
-        //clawStatus = ClawStatus.OPEN;
-        if(SlideExtended){Base.setPosition(0.6);}
-    }
-    /*
-    public void Cycle(){
-        switch (clawStatus){
-            case OPEN:
-                Double();
-                break;
-            case DOUBLE:
-                Open();
-                break;
-            case SINGLE:
-                Open();
-                break;
-        }
-    }
-     */
     public int DetectPixels(){
         return 0;
     }
