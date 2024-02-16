@@ -1,11 +1,13 @@
-package org.firstinspires.ftc.teamcode.MyCode;
+package org.firstinspires.ftc.teamcode.MyCode.util;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.teamcode.util.Encoder;
 
+@Disabled
 @TeleOp
 public class OdoTesting extends LinearOpMode {
 

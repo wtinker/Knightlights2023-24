@@ -1,19 +1,19 @@
 package org.firstinspires.ftc.teamcode.MyCode.CompCode;
 
-import com.acmerobotics.roadrunner.drive.MecanumDrive;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.MyCode.AprilTag;
-import org.firstinspires.ftc.teamcode.MyCode.Intake;
-import org.firstinspires.ftc.teamcode.MyCode.Output;
-import org.firstinspires.ftc.teamcode.MyCode.RGB;
-import org.firstinspires.ftc.teamcode.MyCode.Storage;
+import org.firstinspires.ftc.teamcode.MyCode.util.AprilTag;
+import org.firstinspires.ftc.teamcode.MyCode.util.Intake;
+import org.firstinspires.ftc.teamcode.MyCode.util.Output;
+import org.firstinspires.ftc.teamcode.MyCode.util.Storage;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
+@Disabled
 @TeleOp(name = "Red Teleop")
 public class RedTeleop extends LinearOpMode {
 

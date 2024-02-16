@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.MyCode;
+package org.firstinspires.ftc.teamcode.MyCode.util;
 
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;

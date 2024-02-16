@@ -7,9 +7,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.MyCode.Intake;
-import org.firstinspires.ftc.teamcode.MyCode.Output;
-import org.firstinspires.ftc.teamcode.MyCode.Storage;
+import org.firstinspires.ftc.teamcode.MyCode.util.Intake;
+import org.firstinspires.ftc.teamcode.MyCode.util.Output;
+import org.firstinspires.ftc.teamcode.MyCode.util.Storage;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 

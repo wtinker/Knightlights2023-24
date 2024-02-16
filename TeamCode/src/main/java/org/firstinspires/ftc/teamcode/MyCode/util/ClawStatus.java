@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.MyCode;
+package org.firstinspires.ftc.teamcode.MyCode.util;
 
 public enum ClawStatus {
     SINGLE,

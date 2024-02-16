@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.MyCode;
+package org.firstinspires.ftc.teamcode.MyCode.util;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
@@ -15,9 +15,9 @@ public class Intake {
     DcMotor intake;
     public boolean isPowered = false;
     public boolean isRaised = true;
-    Servo servo;
-    double up = 0.1;
-    double down = 0.38;
+    Servo servo, servoup;
+    double up = 0.3;
+    double down = 0;
     public Intake (LinearOpMode opmode, HardwareMap hardwareMap) {
         myOpMode = opmode;
         hardwareMap = hardwareMap;
@@ -27,6 +27,9 @@ public class Intake {
 
         servo = hardwareMap.get(Servo.class, "Intake servo");
         servo.setPosition(up);
+
+        servoup = hardwareMap.get(Servo.class, "Intake servo 2");
+        servoup.setPosition(0.17);
 
         myOpMode.telemetry.addData("Intake Initialized", null);
         myOpMode.telemetry.update();
@@ -55,9 +58,11 @@ public class Intake {
         isRaised = true;
         Stop();
         servo.setPosition(up);
+        servoup.setPosition(0.17);
     }
     public void Lower(){
         isRaised = false;
         servo.setPosition(down);
+        servoup.setPosition(0);
     }
 }

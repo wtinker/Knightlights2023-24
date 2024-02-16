@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.MyCode;
+package org.firstinspires.ftc.teamcode.MyCode.util;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 
@@ -11,7 +11,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Output {
     private LinearOpMode myOpMode = null;
     DcMotor Slide, Slide2;
-    Servo Base, Claw, Drone;
+    Servo Base, Claw, Claw2, Drone, Single;
+    ClawStatus clawStatus = ClawStatus.OPEN;
     int SlideTarget = 0;
     public boolean SlideExtended = false;
     //ClawStatus clawStatus = ClawStatus.OPEN;
@@ -20,8 +21,8 @@ public class Output {
     boolean disable = false;
     double prevtime = 0;
     static double kP = 0.0025;
-    static double kI = 0.00;
-    static double kD = 0.0000;
+    static double kI = 0;
+    static double kD = 0.000;
     double preverror = 0;
     double Pgain = 0;
     double Igain = 0;
@@ -41,9 +42,13 @@ public class Output {
 
         Base = hardwareMap.get(Servo.class, "Base");
         Claw = hardwareMap.get(Servo.class, "Claw");
+        Claw2 = hardwareMap.get(Servo.class, "Claw2");
         Drone = hardwareMap.get(Servo.class, "Drone");
+        Single = hardwareMap.get(Servo.class, "Single");
+        Single.setPosition(1);
         Base.setPosition(1);
-        Claw.setPosition(0.5);
+        Claw.setPosition(0.26);
+        Claw2.setPosition(0.26);
         Drone.setPosition(0);
 
         myOpMode.telemetry.addData("Output Initialized", null);
@@ -55,30 +60,24 @@ public class Output {
     public void Extend(int targ){
         SlideTarget = targ;
         SlideExtended = true;
-        //RunOutput();
-        //Double();
-    }
-    public void Adjust(int value){
-        SlideTarget += value;
-        if(SlideTarget < 700){SlideTarget = 700;}
     }
     public void Retract(){
         SlideExtended = false;
         SlideTarget = 0;
-        //Slide2.setPower(-Slide.getPower());
-        //RunOutput();
-        //Open();
     }
     public void RunOutput(){
-        if(!disable){
         Slide.setTargetPosition(SlideTarget);
         Slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         Slide.setPower(1);
-        //if(Math.abs(Slide.getCurrentPosition() - SlideTarget) < 100){Slide2.setPower(0);}
-        if(!SlideExtended){Descore();}
-        //Slide2.setPower(-Slide.getPower());
-        //if(myOpMode.getRuntime() - scoreTime > 2 && scoring){Descore();}
-    }}
+        if(!SlideExtended || Slide.getCurrentPosition() < 1000){Descore();}
+        else{Score();}
+    }
+    public void RunOutputRetracted(){
+        Slide.setTargetPosition(SlideTarget);
+        Slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        Slide.setPower(1);
+        Descore();
+    }
     public void SlidePID(double runtime){
         double elapsed = runtime - prevtime;
         double error = SlideTarget - Slide.getCurrentPosition();
@@ -92,17 +91,20 @@ public class Output {
         Slide2.setPower(gain);
         prevtime = runtime;
         preverror = error;
-        if(!SlideExtended){Descore();}
+        if(!SlideExtended || Slide.getCurrentPosition() < 1000){Descore();}
+        else {Score();}
         myOpMode.telemetry.addData("error:", error);
     }
     public void Climb(){
-        SlideTarget = 0;
-        SlideExtended = false;
-        Slide2.setPower(-Slide.getPower());
+        Descore();
+        Slide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        Slide2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        Slide.setPower(-1);
+        Slide2.setPower(-1);
     }
     public void Score(){
         scoring = true;
-        Base.setPosition(0.8);
+        Base.setPosition(0.47);
         scoreTime = myOpMode.getRuntime();
     }
     public void Descore(){
@@ -113,14 +115,59 @@ public class Output {
         if(scoring){Descore();}
         else{Score();}
     }
-    public void Single(){
-        Base.setPosition(0.87);
-        scoring = true;
+    public void Single() {
+        Single.setPosition(0.78);
+    }
+    public void Taken(){
+        Single.setPosition(1);
+    }
+    public void BaseOut(){
+        Base.setPosition(0.47);
+    }
+    public void BaseIn(){
+        Base.setPosition(1);
+    }
+    public void Close(){
+        Claw.setPosition(0.7);
+        Claw2.setPosition(0.7);
+        clawStatus = ClawStatus.DOUBLE;
+    }
+    public void Half(){
+        Claw.setPosition(0.7);
+        Claw.setPosition(0.26);
+        clawStatus = ClawStatus.SINGLE;
+    }
+    public void Open(){
+        Claw.setPosition(0.26);
+        Claw2.setPosition(0.26);
+        clawStatus = ClawStatus.OPEN;
+    }
+    public void Cycle(){
+        switch (clawStatus){
+            case SINGLE:
+                Open();
+                break;
+            case OPEN:
+                Close();
+                break;
+            case DOUBLE:
+                Half();
+                break;
+        }
     }
     public int DetectPixels(){
         return 0;
     }
     public void LaunchDrone(){
-        Drone.setPosition(0.3);
+        Drone.setPosition(1);
+    }
+    public void Read(){
+        myOpMode.telemetry.addData("Encoder value", Slide.getCurrentPosition());
+    }
+    public void Disable(){
+        Slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        Slide2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        Slide.setPower(0);
+        Slide2.setPower(0);
     }
 }
