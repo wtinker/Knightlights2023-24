@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.MyCode.util;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+@Disabled
 @TeleOp(name = "moar")
 public class moartesting extends LinearOpMode {
 

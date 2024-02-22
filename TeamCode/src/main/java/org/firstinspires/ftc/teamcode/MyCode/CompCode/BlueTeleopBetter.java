@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.MyCode.CompCode;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -13,6 +14,7 @@ import org.firstinspires.ftc.teamcode.MyCode.util.RGB;
 import org.firstinspires.ftc.teamcode.MyCode.util.Storage;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
+@Disabled
 @TeleOp(name = "Blue Teleop better")
 public class BlueTeleopBetter extends LinearOpMode {
 

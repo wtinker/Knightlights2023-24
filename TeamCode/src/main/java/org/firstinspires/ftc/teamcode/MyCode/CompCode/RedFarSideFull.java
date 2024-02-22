@@ -99,10 +99,9 @@ public class RedFarSideFull extends LinearOpMode {
                     if(done){
                         done = false;
                         double distance = dist.getDistance(DistanceUnit.CM);
-                        robotstate = robotState.LEFT1; drive.followTrajectorySequenceAsync(trajleft1);
-                        //if(distance<17){robotstate = robotState.LEFT1; drive.followTrajectorySequenceAsync(trajleft1);}
-                        //else if(37<distance && distance<50){robotstate = robotState.RIGHT1; drive.followTrajectorySequenceAsync(trajright1);}
-                        //else {robotstate = robotState.MID1; drive.followTrajectorySequenceAsync(trajmid1);}
+                        if(distance<17){robotstate = robotState.LEFT1; drive.followTrajectorySequenceAsync(trajleft1);}
+                        else if(37<distance && distance<50){robotstate = robotState.RIGHT1; drive.followTrajectorySequenceAsync(trajright1);}
+                        else {robotstate = robotState.MID1; drive.followTrajectorySequenceAsync(trajmid1);}
                     } break;
                 case LEFT1:
                     if(done){

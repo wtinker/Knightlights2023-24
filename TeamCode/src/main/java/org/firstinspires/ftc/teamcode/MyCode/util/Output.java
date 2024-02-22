@@ -59,6 +59,7 @@ public class Output {
     }
     public void Extend(int targ){
         SlideTarget = targ;
+        Close();
         SlideExtended = true;
     }
     public void Retract(){
@@ -133,7 +134,7 @@ public class Output {
         clawStatus = ClawStatus.DOUBLE;
     }
     public void Half(){
-        Claw.setPosition(0.7);
+        Claw2.setPosition(0.7);
         Claw.setPosition(0.26);
         clawStatus = ClawStatus.SINGLE;
     }

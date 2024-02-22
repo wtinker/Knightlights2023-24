@@ -603,7 +603,8 @@ public class TrajectorySequenceBuilder {
                 newSegment = new TrajectorySegment(new Trajectory(thisSegment.getTrajectory().getPath(), thisSegment.getTrajectory().getProfile(), newMarkers));
             }
 
-            sequenceSegments.set(segmentIndex, newSegment);
+            try{sequenceSegments.set(segmentIndex, newSegment);}
+            catch (IndexOutOfBoundsException e){}
         }
 
         return sequenceSegments;

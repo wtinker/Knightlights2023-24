@@ -37,37 +37,39 @@ public class BlueFarSideFull extends LinearOpMode {
         boolean left = false;
         boolean middle = false;
         boolean right = false;
-        Pose2d startpose = new Pose2d(-34, 62, Math.toRadians(180));
+        Pose2d startpose = new Pose2d(-34, 62, Math.toRadians(90));
         TrajectorySequence t1 = drive.trajectorySequenceBuilder(startpose)
-                .splineToSplineHeading(new Pose2d(-56, 36, Math.toRadians(180)), Math.toRadians(-90))
+                .splineToSplineHeading(new Pose2d(-56, 36, Math.toRadians(-90)), Math.toRadians(-90))
                 .splineToSplineHeading(new Pose2d(-56, 25, Math.toRadians(180)), Math.toRadians(-90))
                 .addTemporalMarker(()->{done = true;})
                 .build();
         TrajectorySequence trajright1 = drive.trajectorySequenceBuilder(t1.end())
-                .lineTo(new Vector2d(-34, 34))
-                .waitSeconds(1)
-                .addDisplacementMarker(()->{intake.Lower(); sleep(250); intake.Raise();})
-                .splineTo(new Vector2d(-30, 12), Math.toRadians(0))
+                .lineToSplineHeading(new Pose2d(-46, 16, Math.toRadians(90)))
+                .forward(8)
+                .back(12)
+                .waitSeconds(0.001)
+                .splineTo(new Vector2d(-24, 12), Math.toRadians(0))
                 .splineTo(new Vector2d(36, 24), Math.toRadians(90))
-                .splineTo(new Vector2d(51, 30), Math.toRadians(0))
+                .splineTo(new Vector2d(51, 25), Math.toRadians(0))
                 .addTemporalMarker(()->{done = true;})
                 .build();
         TrajectorySequence trajmid1 = drive.trajectorySequenceBuilder(t1.end())
-                .lineTo(new Vector2d(-36, 14))
-                .turn(Math.toRadians(90))
-                .addDisplacementMarker(()->{intake.Lower(); sleep(250); intake.Raise();})
-                .splineTo(new Vector2d(-24, 12), Math.toRadians(0))
+                .lineToSplineHeading(new Pose2d(-46, 24, Math.toRadians(0)))
+                .forward(6)
+                .back(10)
+                .strafeRight(5)
+                .splineToSplineHeading(new Pose2d(-24, 12, Math.toRadians(0)), Math.toRadians(0))
                 .splineTo(new Vector2d(36, 24), Math.toRadians(90))
-                .splineTo(new Vector2d(51, 37), Math.toRadians(0))
+                .splineTo(new Vector2d(50, 31), Math.toRadians(0))
                 .addTemporalMarker(()->{done = true;})
                 .build();
         TrajectorySequence trajleft1 = drive.trajectorySequenceBuilder(t1.end())
-                .lineTo(new Vector2d(-46, 16))
-                .turn(Math.toRadians(90))
-                .addDisplacementMarker(()->{intake.Lower(); sleep(250); intake.Raise();})
-                .splineTo(new Vector2d(-24, 12), Math.toRadians(0))
+                .forward(25)
+                .back(14)
+                .waitSeconds(0.001)
+                .splineToSplineHeading(new Pose2d(-24, 12, Math.toRadians(0)), Math.toRadians(0))
                 .splineTo(new Vector2d(36, 24), Math.toRadians(90))
-                .splineTo(new Vector2d(51, 42), Math.toRadians(0))
+                .splineTo(new Vector2d(50, 37), Math.toRadians(0))
                 .addTemporalMarker(()->{done = true;})
                 .build();
 
@@ -102,39 +104,27 @@ public class BlueFarSideFull extends LinearOpMode {
                 case LEFT1:
                     if(done){
                         done = false;
-                        output.Extend(730);
-                        sleep(1500);
                         output.Single();
-                        sleep(500);
-                        output.Descore();
-                        sleep(500);
-                        output.Retract();
+                        sleep(1000);
+                        output.Taken();
                         robotstate = RedFarSideFull.robotState.LEFT2;
                         drive.followTrajectorySequenceAsync(trajleft2);
                     } break;
                 case RIGHT1:
                     if(done){
                         done = false;
-                        output.Extend(730);
-                        sleep(1500);
                         output.Single();
-                        sleep(500);
-                        output.Descore();
-                        sleep(500);
-                        output.Retract();
+                        sleep(1000);
+                        output.Taken();
                         robotstate = RedFarSideFull.robotState.RIGHT2;
                         drive.followTrajectorySequenceAsync(trajright2);
                     } break;
                 case MID1:
                     if(done){
                         done = false;
-                        output.Extend(730);
-                        sleep(1500);
                         output.Single();
-                        sleep(500);
-                        output.Descore();
-                        sleep(500);
-                        output.Retract();
+                        sleep(1000);
+                        output.Taken();
                         robotstate = RedFarSideFull.robotState.MID2;
                         drive.followTrajectorySequenceAsync(trajmid2);
                     } break;
