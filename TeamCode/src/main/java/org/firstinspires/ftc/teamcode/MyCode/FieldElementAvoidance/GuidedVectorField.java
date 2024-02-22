@@ -3,8 +3,9 @@ package org.firstinspires.ftc.teamcode.MyCode.FieldElementAvoidance;
 public class GuidedVectorField {
     double xGain, yGain;
     double range = 24;
+    double scaling = 24;
     public GuidedVectorField(){
-        xGain = 0.01;
+        xGain = 1;
         yGain = 1;
     }
     public GuidedVectorField(double Xgain, double Ygain){
@@ -69,9 +70,10 @@ public class GuidedVectorField {
     }
     Vector delta(Vector pos, Vector coord){
         Vector out = new Vector();
-        coord.scale(-1);
+        coord.rotate(Math.PI);
         Vector sum = Vector.addVectors(pos, coord);
         if(sum.getMag() <= range){out.addVector(sum);}
+        out.scale(scaling);
         out.invert();
         return out;
     }

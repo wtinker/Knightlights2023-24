@@ -15,20 +15,8 @@ public class Vector {
         yValue = y;
         mag = Math.sqrt(xValue*xValue + yValue*yValue);
         theta = Math.atan2(yValue, xValue);
-    }
-    public Vector(double x, double y, boolean inverted){
-        if(inverted && (x!=0 || y!=0)){
-            mag = Math.sqrt(x*x + y*y);
-            theta = Math.atan2(y, x);
-            mag = 1 / mag;
-            xValue = mag*Math.cos(theta);
-            yValue = mag*Math.sin(theta);
-        }else{
-            xValue = x;
-            yValue = y;
-            mag = Math.sqrt(xValue*xValue + yValue*yValue);
-            theta = Math.atan2(yValue, xValue);
-        }
+        if((xValue > 0 && yValue < 0) || (xValue < 0 && yValue > 0)){theta += Math.PI;}
+        else if(xValue < 0 && yValue < 0){theta += 2*Math.PI;}
     }
     public double getxValue(){return xValue;}
     public double getyValue(){return yValue;}
@@ -51,12 +39,16 @@ public class Vector {
         yValue += v1.getyValue();
         mag = Math.sqrt(xValue*xValue + yValue*yValue);
         theta = Math.atan2(yValue, xValue);
+        if((xValue > 0 && yValue < 0) || (xValue < 0 && yValue > 0)){theta += Math.PI;}
+        else if(xValue < 0 && yValue < 0){theta += 2*Math.PI;}
     }
     public void scale(double xFactor, double yFactor){
         xValue = xValue * xFactor;
         yValue = yValue * yFactor;
         mag = Math.sqrt(xValue*xValue + yValue*yValue);
         theta = Math.atan2(yValue, xValue);
+        if((xValue > 0 && yValue < 0) || (xValue < 0 && yValue > 0)){theta += Math.PI;}
+        else if(xValue < 0 && yValue < 0){theta += 2*Math.PI;}
     }
     public void scale(double factor){
         mag = mag * factor;
